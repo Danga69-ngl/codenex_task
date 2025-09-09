@@ -35,3 +35,19 @@ Ensure movie titles are entered accurately for best results.
 License
 This project is open source and available under the MIT License.
 
+Usage
+Download the tmdb_5000_movies.csv dataset and place it in the project directory.
+Run the recommendation script:
+python movie_recommender.py
+When prompted, enter a movie title to get recommendations.
+To exit the program, type quit, exit, or q.
+How It Works
+The script loads movie metadata and parses JSON fields to extract genres and keywords.
+It combines these features with the movie overview into a single text string.
+TF-IDF vectorization converts the text into numerical vectors.
+Cosine similarity measures how close movies are to each other based on these vectors.
+The system returns the top 5 movies most similar to the input title.
+Notes
+The system does not use user ratings or reviews; recommendations are based solely on movie content.
+For best results, enter movie titles exactly as they appear in the dataset.
+The cast feature is currently empty but can be extended in the future.
