@@ -3,10 +3,8 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Load dataset
 movies = pd.read_csv('tmdb_5000_movies.csv')
 
-# Parse JSON columns to extract names
 def parse_json_column(text):
     try:
         items = json.loads(text.replace("'", '"'))
@@ -17,23 +15,18 @@ def parse_json_column(text):
 movies['genres'] = movies['genres'].apply(parse_json_column)
 movies['keywords'] = movies['keywords'].apply(parse_json_column)
 
-# Cast data is currently empty; can be extended later
 movies['cast'] = [[] for _ in range(len(movies))]
 
-# Combine features into a single string per movie
 def combine_features(row):
     return ' '.join(row['genres']) + ' ' + ' '.join(row['keywords']) + ' ' + ' '.join(row['cast']) + ' ' + (row['overview'] if pd.notnull(row['overview']) else '')
 
 movies['combined_features'] = movies.apply(combine_features, axis=1)
 
-# Vectorize text features
 tfidf = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf.fit_transform(movies['combined_features'])
 
-# Compute cosine similarity matrix
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# Map movie titles to indices
 title_to_index = pd.Series(movies.index, index=movies['title']).drop_duplicates()
 
 def recommend_movies(title, cosine_sim=cosine_sim):
@@ -43,7 +36,7 @@ def recommend_movies(title, cosine_sim=cosine_sim):
     idx = title_to_index[title]
     sim_scores = list(enumerate(cosine_sim[idx]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:6]  # Exclude the movie itself
+    sim_scores = sim_scores[1:6]
     
     movie_indices = [i[0] for i in sim_scores]
     recommended_titles = movies['title'].iloc[movie_indices].values
