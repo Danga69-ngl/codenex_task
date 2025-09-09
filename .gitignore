@@ -47,11 +47,6 @@ Thumbs.db
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Data files (optional - uncomment if you don't want to include the dataset)
-# *.csv
-# *.json
-# *.xlsx
-
 # Logs
 *.log
 
